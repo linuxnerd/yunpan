@@ -1,0 +1,21 @@
+<ion-view view-title="资料库">
+  <ion-content class="has-header">
+    <div class="list">
+      <div ng-repeat = "repo in repos">
+        <div class="item item-divider">
+          {{repo.owner}}
+        </div>
+        <div ng-repeat = "name in repo.names">
+          <a class="item item-icon-left"
+            ui-sref="tab.repo-directory({repo_name: name.name, repo_id: name.id, path: '/'})">
+            <i class="icon ion-folder"></i>
+            {{name.name}}
+            <span class="item-note">
+              {{name.size_formatted}}
+            </span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>
