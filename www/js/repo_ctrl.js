@@ -2,11 +2,6 @@ angular.module("RepoModule", [])
 .controller('RepoCtrl', function($rootScope, $scope, $http, storage) {
   $scope.repos = [];
 
-  $scope.$watch('$viewContentLoaded', function() {
-    $scope.refreshRepo();
-  })
-
-
   $scope.refreshRepo = function() {
     var refresh_url = $rootScope.base_url + "repos/"
 
@@ -46,5 +41,7 @@ angular.module("RepoModule", [])
       
     });
   }
+
+  $scope.refreshRepo();
 
 })

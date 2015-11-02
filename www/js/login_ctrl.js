@@ -36,7 +36,7 @@ angular.module("LoginModule", [])
       console.log(data);
       $ionicPopup.alert({
         title: '登录失败',
-        template: data.non_field_errors,
+        template: "用户名或密码错误",
         okText: '确认'
       });
     });
