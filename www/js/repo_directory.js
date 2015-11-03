@@ -116,7 +116,9 @@ angular.module("DirectoryModule", [])
           $scope.deleteFile($scope.repo_id, $scope.path, file);
           break;
         case 2:
+          $scope.currentFile = file;
           $scope.rename_file_modal.show();
+          break;
         default:
           console.log("错误的输入：" + index);
         }
@@ -201,10 +203,10 @@ angular.module("DirectoryModule", [])
   // 删除文件请求
   $scope.deleteFile = function(repo_id, dir, file) {
     console.log("删除文件：" + dir + '/' + file.name);
-    var delete_url = $rootScope.base_url + 'repos/' + repo_id + '/file/';
+    var delete_file_url = $rootScope.base_url + 'repos/' + repo_id + '/file/';
     $http({
       method  : 'DELETE',
-      url     : delete_url,
+      url     : delete_file_url,
       params  : { p: dir + '/' + file.name }
     }).success(function(data) {
       // success
@@ -224,7 +226,34 @@ angular.module("DirectoryModule", [])
 
   // 重命名文件请求
   $scope.renameFile = function() {
-    console.log($scope.renameInfo.filename);
+    console.log("重命名文件：" + $scope.currentFile.name);
+    var rename_file_url = $rootScope.base_url + 'repos/' + 
+                          $scope.repo_id + '/file/';
+
+    $http({
+      method  : 'POST',
+      url     : rename_file_url,
+      params  : { p: $scope.path + '/' + $scope.currentFile.name },
+      headers : { Accept: "application/json; charset=utf-8; indent=4" },
+      data    : $.param({
+                  operation: "rename",
+                  newname: $scope.renameInfo.filename
+                })
+    }).success(function(data) {
+      // success
+      console.log(data);
+
+      // 修改双向绑定的数组文件名
+      for (var i = 0; i < $scope.dirs.length; i++) {
+        if($scope.dirs[i].name == $scope.currentFile) {
+          $scope.dirs[i].name = $scope.renameInfo.filename;
+        }
+      }
+      $scope.rename_file_modal.hide();
+    }).error(function(data, status) {
+      // error
+
+    });
   }
 
   // 下载文件请求
