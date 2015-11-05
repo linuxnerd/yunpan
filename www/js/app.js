@@ -6,7 +6,7 @@
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
 angular.module('yunpan', ['ionic', 'yunpan.services', 'angularLocalStorage', 'LoginModule', 'RepoModule',
-  'DirectoryModule'])
+  'DirectoryModule', 'DownloadModule'])
 
 .run(function($ionicPlatform, $rootScope) {
   $ionicPlatform.ready(function() {
@@ -65,13 +65,24 @@ angular.module('yunpan', ['ionic', 'yunpan.services', 'angularLocalStorage', 'Lo
       }
     })
 
-    // 资料详情
+    // 资料库详情
     .state('tab.repo-directory', {
       url: '/:repo_name/:repo_id/detail/:path',
       views: {
         'tab-repo': {
           templateUrl : 'templates/repo-directory.html',
           controller  : 'DirectoryCtrl'
+        }
+      }
+    })
+
+    // 下载
+    .state('tab.repo-download', {
+      url: '/download/:file_name/:url',
+      views: {
+        'tab-repo': {
+          templateUrl : 'templates/repo-download.html',
+          controller  : 'DownloadCtrl'
         }
       }
     });

@@ -1,7 +1,7 @@
 angular.module("DirectoryModule", [])
 .controller('DirectoryCtrl', 
   function($rootScope, $stateParams, $scope, $http, storage, $ionicLoading, 
-            $ionicActionSheet, $timeout, $ionicModal) {
+            $ionicActionSheet, $timeout, $ionicModal, $state) {
   
   $scope.repo_name = $stateParams.repo_name;
   $scope.repo_id = $stateParams.repo_id;
@@ -115,6 +115,9 @@ angular.module("DirectoryModule", [])
         case 0:
           $scope.deleteFile($scope.repo_id, $scope.path, file);
           break;
+        case 1:
+          $scope.downloadFile($scope.repo_id, $scope.path, file)
+          break;
         case 2:
           $scope.currentFile = file;
           $scope.rename_file_modal.show();
@@ -227,14 +230,12 @@ angular.module("DirectoryModule", [])
   // 重命名文件请求
   $scope.renameFile = function() {
     console.log("重命名文件：" + $scope.currentFile.name);
-    var rename_file_url = $rootScope.base_url + 'repos/' + 
-                          $scope.repo_id + '/file/';
+    var rename_file_url = $rootScope.base_url + 'repos/' + $scope.repo_id + '/file/';
 
     $http({
       method  : 'POST',
       url     : rename_file_url,
       params  : { p: $scope.path + '/' + $scope.currentFile.name },
-      headers : { Accept: "application/json; charset=utf-8; indent=4" },
       data    : $.param({
                   operation: "rename",
                   newname: $scope.renameInfo.filename
@@ -242,27 +243,39 @@ angular.module("DirectoryModule", [])
     }).success(function(data) {
       // success
       console.log(data);
-
-      // 修改双向绑定的数组文件名
-      for (var i = 0; i < $scope.dirs.length; i++) {
-        if($scope.dirs[i].name == $scope.currentFile) {
-          $scope.dirs[i].name = $scope.renameInfo.filename;
-        }
-      }
+      // 请求成功但是不会返回成功
+      // 重新请求
+      $scope.enterDir($scope.repo_id, $scope.path);
       $scope.rename_file_modal.hide();
     }).error(function(data, status) {
+      // error
+      // TODO：由于重命名成功也会返回301，所以按照失败处理
+      $scope.enterDir($scope.repo_id, $scope.path);
+      $scope.rename_file_modal.hide();
+    });
+  }
+
+  // 下载文件请求
+  $scope.downloadFile = function(repo_id, dir, file) {
+    var download_file_url = $rootScope.base_url + 'repos/' + repo_id + '/file/';
+
+    $http({
+      method  : 'GET',
+      url     : download_file_url,
+      params  : { p: dir + '/' + file.name }
+    }).success(function(data) {
+      // success
+      console.log(data);
+      $state.go("tab.repo-download", {url: data, file_name: file.name});
+    }).error(function(data) {
       // error
 
     });
   }
 
-  // 下载文件请求
-  $scope.downloadFile = function() {
-    
-  }
-
-  // 下载文件请求
+  // 分享链接复制到剪切板
   $scope.copyUrl2Clipboard = function() {
     
   }
+
 })
