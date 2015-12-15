@@ -396,14 +396,13 @@ angular.module("DirectoryModule", [])
 
     var create_shared_link_url = $rootScope.base_url + 'repos/' +
                                  repo_id + '/file/shared-link/';
-
     $http({
       method : 'PUT',
       url    : create_shared_link_url,
       data   : $.param({ p: dir + '/' + file.name })
-    }).success(function(data, status, headers, config) {
+    }).success(function(data) {
       // success
-      console.log(headers('Location'));
+      console.log(data);
     }).error(function(data) {
       // error
 

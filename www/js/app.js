@@ -11,8 +11,8 @@ angular.module('yunpan', ['ionic', 'yunpan.services', 'angularLocalStorage', 'Lo
 .run(function($ionicPlatform, $rootScope) {
   $ionicPlatform.ready(function() {
     // $rootScope.base_url= "http://198.15.0.124:8000/api2/";
-    // $rootScope.base_url= "http://144.131.254.19:8000/api2/";
-    $rootScope.base_url= "http://180.169.95.137:8000/api2/";
+    $rootScope.base_url= "http://144.131.254.19:8000/api2/";
+    // $rootScope.base_url= "http://180.169.95.137:8000/api2/";
 
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
